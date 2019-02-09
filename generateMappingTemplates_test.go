@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGenerateMappingTemplates(t *testing.T) {
+func TestSuccessGenerateMappingTemplates(t *testing.T) {
 	expect := &MappingTemplates{
 		MappingTemplates: []*Template{
 			&Template{
@@ -14,6 +14,13 @@ func TestGenerateMappingTemplates(t *testing.T) {
 				Field:      "createProduct",
 				Request:    "haloLambda/mutation/createProduct/req.vtl",
 				Response:   "haloLambda/mutation/createProduct/res.vtl",
+				DataSource: "haloLambda",
+			},
+			&Template{
+				Type:       "Namespace",
+				Field:      "languages",
+				Request:    "haloLambda/namespace/languages/req.vtl",
+				Response:   "haloLambda/namespace/languages/res.vtl",
 				DataSource: "haloLambda",
 			},
 			&Template{
@@ -36,4 +43,8 @@ func TestGenerateMappingTemplates(t *testing.T) {
 	mappingTemplates := GenerateMappingTemplates("./mapping-templates")
 
 	require.Equal(t, expect, mappingTemplates)
+}
+
+func TestNotMatchGenerateMappingTemplates(t *testing.T) {
+	require.PanicsWithValue(t, "not match directory structure to generate mappingtemplates", func() { GenerateMappingTemplates("./somethingWrong") })
 }

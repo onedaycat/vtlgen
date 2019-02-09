@@ -4,10 +4,10 @@ fields:
   request: haloLambda/mutation/createProduct/req.vtl
   response: haloLambda/mutation/createProduct/res.vtl
   dataSource: haloLambda
-- type: Namespace
-  field: languages
-  request: haloLambda/namespace/languages/req.vtl
-  response: haloLambda/namespace/languages/res.vtl
+- type: Namspeces
+  field: language
+  request: haloLambda/namspeces/language/req.vtl
+  response: haloLambda/namspeces/language/res.vtl
   dataSource: haloLambda
 - type: Query
   field: product

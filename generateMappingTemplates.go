@@ -15,13 +15,13 @@ const (
 	RequestOrResponse = 3
 )
 
-// GenerateMappingTemplates(parseDirectory)
 func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 	var mappingTemplates []*Template
 
 	parseDirectory = path.Clean(parseDirectory)
 	cutParseDirectory := regexp.MustCompile(parseDirectory + "/")
-	isValidFilename := regexp.MustCompile(".+/(mutation|query|subscription).+/(req|res).vtl")
+	// meaning: (datasource)/(type)/(field)/(req|res)
+	isValidFilename := regexp.MustCompile("(.+)/(.+)/(.+)/(req|res).vtl")
 
 	err := filepath.Walk(parseDirectory, func(path string, info os.FileInfo, err error) error {
 		var req, res string
@@ -71,7 +71,7 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 	}
 
 	if len(mappingTemplates) == 0 {
-		panic("not have path match")
+		panic("not match directory structure to generate mappingtemplates")
 	}
 
 	// insert default request and response
