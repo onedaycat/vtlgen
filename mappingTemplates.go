@@ -5,9 +5,9 @@ type MappingTemplates struct {
 }
 
 type Template struct {
-	Type       string `yaml:"type"`
-	Field      string `yaml:"field"`
-	Request    string `yaml:"request"`
-	Response   string `yaml:"response"`
-	DataSource string `yaml:"dataSource"`
+	GraphqlType string `yaml:"type"`
+	Field       string `yaml:"field"`
+	Request     string `yaml:"request"`
+	Response    string `yaml:"response"`
+	DataSource  string `yaml:"dataSource"`
 }

@@ -9,44 +9,44 @@ import (
 )
 
 const (
-	DataSource        = 0
-	Type              = 1
-	Field             = 2
-	RequestOrResponse = 3
+	datasource        = 0
+	graphqlType       = 1
+	field             = 2
+	requestOrResponse = 3
 )
+
+// meaning: (datasource)/(type)/(field)/(req|res)
+var IsValidFilename = regexp.MustCompile("(.+)/(.+)/(.+)/(req|res).vtl")
 
 func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 	var mappingTemplates []*Template
 
 	parseDirectory = path.Clean(parseDirectory)
-	cutParseDirectory := regexp.MustCompile(parseDirectory + "/")
-	// meaning: (datasource)/(type)/(field)/(req|res)
-	isValidFilename := regexp.MustCompile("(.+)/(.+)/(.+)/(req|res).vtl")
 
 	err := filepath.Walk(parseDirectory, func(path string, info os.FileInfo, err error) error {
 		var req, res string
 
 		isMappingTemplatesExist := false
 
-		if !isValidFilename.MatchString(path) {
+		if !IsValidFilename.MatchString(path) {
 			return nil
 		}
 
-		path = cutParseDirectory.ReplaceAllString(path, "")
+		path = strings.Replace(path, parseDirectory+"/", "", 1)
 		templateDetail := strings.Split(path, "/")
 
-		if templateDetail[RequestOrResponse] == "req.vtl" {
-			req = templateDetail[DataSource] + "/" + templateDetail[Type] + "/" + templateDetail[Field] + "/" + templateDetail[RequestOrResponse]
+		if templateDetail[requestOrResponse] == "req.vtl" {
+			req = templateDetail[datasource] + "/" + templateDetail[graphqlType] + "/" + templateDetail[field] + "/" + templateDetail[requestOrResponse]
 		}
 
-		if templateDetail[RequestOrResponse] == "res.vtl" {
-			res = templateDetail[DataSource] + "/" + templateDetail[Type] + "/" + templateDetail[Field] + "/" + templateDetail[RequestOrResponse]
+		if templateDetail[requestOrResponse] == "res.vtl" {
+			res = templateDetail[datasource] + "/" + templateDetail[graphqlType] + "/" + templateDetail[field] + "/" + templateDetail[requestOrResponse]
 			beforeItem := len(mappingTemplates) - 1
 
 			if len(mappingTemplates) != 0 &&
-				mappingTemplates[beforeItem].DataSource == templateDetail[DataSource] &&
-				mappingTemplates[beforeItem].Type == strings.Title(templateDetail[Type]) &&
-				mappingTemplates[beforeItem].Field == templateDetail[Field] &&
+				mappingTemplates[beforeItem].DataSource == templateDetail[datasource] &&
+				mappingTemplates[beforeItem].GraphqlType == strings.Title(templateDetail[graphqlType]) &&
+				mappingTemplates[beforeItem].Field == templateDetail[field] &&
 				mappingTemplates[beforeItem].Request != "" {
 
 				mappingTemplates[beforeItem].Response = res
@@ -56,11 +56,11 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 
 		if !isMappingTemplatesExist {
 			mappingTemplates = append(mappingTemplates, &Template{
-				DataSource: templateDetail[DataSource],
-				Type:       strings.Title(templateDetail[Type]),
-				Field:      templateDetail[Field],
-				Request:    req,
-				Response:   res,
+				DataSource:  templateDetail[datasource],
+				GraphqlType: strings.Title(templateDetail[graphqlType]),
+				Field:       templateDetail[field],
+				Request:     req,
+				Response:    res,
 			})
 		}
 

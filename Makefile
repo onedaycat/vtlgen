@@ -9,10 +9,10 @@ bench:
 
 # correct example
 example:
-	vtlgen/vtlgen -dir=mapping-templates -out=testData/mappingTemplates.yml
+	vtlgen/vtlgen -dir=testdata/mapping-templates -out=testData/mappingTemplates.yml
 
 # manual test
 manual:
-	vtlgen/vtlgen -dir=mapping-templates -out=testData/testing.yml
+	vtlgen/vtlgen -dir=testdata/mapping-templates -out=testData/testing.yml
 
 .DEFAULT_GOAL := build
