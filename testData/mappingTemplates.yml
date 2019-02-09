@@ -1,0 +1,16 @@
+fields:
+- type: Mutation
+  field: createProduct
+  request: haloLambda/mutation/createProduct/req.vtl
+  response: haloLambda/mutation/createProduct/res.vtl
+  dataSource: haloLambda
+- type: Query
+  field: product
+  request: haloLambda/query/product/req.vtl
+  response: res.vtl
+  dataSource: haloLambda
+- type: Subscription
+  field: product
+  request: req.vtl
+  response: haloLambda/subscription/product/res.vtl
+  dataSource: haloLambda
