@@ -1,7 +1,7 @@
 package vtlgen
 
 type MappingTemplates struct {
-	MappingTemplates []*Template `yaml:"fields"`
+	Templates []*Template `yaml:"fields"`
 }
 
 type Template struct {

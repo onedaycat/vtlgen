@@ -8,7 +8,7 @@ import (
 
 func TestSuccessGenerateMappingTemplates(t *testing.T) {
 	expect := &MappingTemplates{
-		MappingTemplates: []*Template{
+		Templates: []*Template{
 			&Template{
 				GraphqlType: "Mutation",
 				Field:       "createProduct",

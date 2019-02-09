@@ -15,47 +15,52 @@ const (
 	requestOrResponse = 3
 )
 
-// meaning: (datasource)/(type)/(field)/(req|res)
-var IsValidFilename = regexp.MustCompile("(.+)/(.+)/(.+)/(req|res).vtl")
+const (
+	emptyString = ""
+	pathDelim   = "/"
+	reqFilename = "req.vtl"
+	resFilename = "res.vtl"
+)
+
+// meaning: (datasource)/(graphqlType)/(field)/(requestOrResponse)
+var isValidFilename = regexp.MustCompile("(.+)/(.+)/(.+)/(req|res).vtl")
 
 func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
-	var mappingTemplates []*Template
-
+	var templates []*Template
 	parseDirectory = path.Clean(parseDirectory)
 
 	err := filepath.Walk(parseDirectory, func(path string, info os.FileInfo, err error) error {
 		var req, res string
+		isTemplatesExist := false
 
-		isMappingTemplatesExist := false
-
-		if !IsValidFilename.MatchString(path) {
+		if !isValidFilename.MatchString(path) {
 			return nil
 		}
 
-		path = strings.Replace(path, parseDirectory+"/", "", 1)
-		templateDetail := strings.Split(path, "/")
+		path = strings.Replace(path, parseDirectory+pathDelim, emptyString, 1)
+		templateDetail := strings.Split(path, pathDelim)
 
-		if templateDetail[requestOrResponse] == "req.vtl" {
-			req = templateDetail[datasource] + "/" + templateDetail[graphqlType] + "/" + templateDetail[field] + "/" + templateDetail[requestOrResponse]
+		if templateDetail[requestOrResponse] == reqFilename {
+			req = templateDetail[datasource] + pathDelim + templateDetail[graphqlType] + pathDelim + templateDetail[field] + pathDelim + templateDetail[requestOrResponse]
 		}
 
-		if templateDetail[requestOrResponse] == "res.vtl" {
-			res = templateDetail[datasource] + "/" + templateDetail[graphqlType] + "/" + templateDetail[field] + "/" + templateDetail[requestOrResponse]
-			beforeItem := len(mappingTemplates) - 1
+		if templateDetail[requestOrResponse] == resFilename {
+			res = templateDetail[datasource] + pathDelim + templateDetail[graphqlType] + pathDelim + templateDetail[field] + pathDelim + templateDetail[requestOrResponse]
+			beforeItem := len(templates) - 1
 
-			if len(mappingTemplates) != 0 &&
-				mappingTemplates[beforeItem].DataSource == templateDetail[datasource] &&
-				mappingTemplates[beforeItem].GraphqlType == strings.Title(templateDetail[graphqlType]) &&
-				mappingTemplates[beforeItem].Field == templateDetail[field] &&
-				mappingTemplates[beforeItem].Request != "" {
+			if len(templates) != 0 &&
+				templates[beforeItem].DataSource == templateDetail[datasource] &&
+				templates[beforeItem].GraphqlType == strings.Title(templateDetail[graphqlType]) &&
+				templates[beforeItem].Field == templateDetail[field] &&
+				templates[beforeItem].Request != emptyString {
 
-				mappingTemplates[beforeItem].Response = res
-				isMappingTemplatesExist = true
+				templates[beforeItem].Response = res
+				isTemplatesExist = true
 			}
 		}
 
-		if !isMappingTemplatesExist {
-			mappingTemplates = append(mappingTemplates, &Template{
+		if !isTemplatesExist {
+			templates = append(templates, &Template{
 				DataSource:  templateDetail[datasource],
 				GraphqlType: strings.Title(templateDetail[graphqlType]),
 				Field:       templateDetail[field],
@@ -70,20 +75,20 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 		panic(err)
 	}
 
-	if len(mappingTemplates) == 0 {
+	if len(templates) == 0 {
 		panic("not match directory structure to generate mappingtemplates")
 	}
 
 	// insert default request and response
-	for _, template := range mappingTemplates {
-		if template.Request == "" {
-			template.Request = "req.vtl"
+	for _, template := range templates {
+		if template.Request == emptyString {
+			template.Request = reqFilename
 		}
 
-		if template.Response == "" {
-			template.Response = "res.vtl"
+		if template.Response == emptyString {
+			template.Response = resFilename
 		}
 	}
 
-	return &MappingTemplates{MappingTemplates: mappingTemplates}
+	return &MappingTemplates{Templates: templates}
 }
