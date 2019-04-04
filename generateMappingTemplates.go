@@ -1,11 +1,14 @@
 package vtlgen
 
 import (
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -16,58 +19,56 @@ const (
 )
 
 const (
-	emptyString = ""
-	pathDelim   = "/"
-	reqFilename = "req.vtl"
-	resFilename = "res.vtl"
+	emptyString    = ""
+	pathDelim      = "/"
+	reqFilename    = "req.vtl"
+	resFilename    = "res.vtl"
+	beforeFilename = "before.vtl"
+	afterFilename  = "after.vtl"
+	pathResolver   = "/resolver"
+	configFilename = "config.yml"
 )
 
 // meaning: (datasource)/(graphqlType)/(field)/(requestOrResponse)
-var isValidFilename = regexp.MustCompile("(.+)/(.+)/(.+)/(req|res).vtl")
+var isValidFilename = regexp.MustCompile("(.+)/config.yml")
 
 func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 	var templates []*Template
 	parseDirectory = path.Clean(parseDirectory)
 
-	err := filepath.Walk(parseDirectory, func(path string, info os.FileInfo, err error) error {
-		var req, res string
-		isTemplatesExist := false
-
+	err := filepath.Walk(parseDirectory+pathResolver, func(path string, info os.FileInfo, err error) error {
 		if !isValidFilename.MatchString(path) {
 			return nil
 		}
 
+		config, err := ioutil.ReadFile(path)
+		if err != nil {
+			panic(err)
+		}
+
+		template := Template{}
+		err = yaml.Unmarshal(config, &template)
+		if err != nil {
+			panic(err)
+		}
+
+		// normal or pipeline resolver
 		path = strings.Replace(path, parseDirectory+pathDelim, emptyString, 1)
-		templateDetail := strings.Split(path, pathDelim)
 
-		if templateDetail[requestOrResponse] == reqFilename {
-			req = templateDetail[datasource] + pathDelim + templateDetail[graphqlType] + pathDelim + templateDetail[field] + pathDelim + templateDetail[requestOrResponse]
+		if template.DataSource != emptyString {
+			req := strings.Replace(path, configFilename, reqFilename, 1)
+			res := strings.Replace(path, configFilename, resFilename, 1)
+			template.Request = req
+			template.Response = res
+		} else {
+			req := strings.Replace(path, configFilename, beforeFilename, 1)
+			res := strings.Replace(path, configFilename, afterFilename, 1)
+			template.Kind = "PIPELINE"
+			template.Request = req
+			template.Response = res
 		}
 
-		if templateDetail[requestOrResponse] == resFilename {
-			res = templateDetail[datasource] + pathDelim + templateDetail[graphqlType] + pathDelim + templateDetail[field] + pathDelim + templateDetail[requestOrResponse]
-			beforeItem := len(templates) - 1
-
-			if len(templates) != 0 &&
-				templates[beforeItem].DataSource == templateDetail[datasource] &&
-				templates[beforeItem].GraphqlType == strings.Title(templateDetail[graphqlType]) &&
-				templates[beforeItem].Field == templateDetail[field] &&
-				templates[beforeItem].Request != emptyString {
-
-				templates[beforeItem].Response = res
-				isTemplatesExist = true
-			}
-		}
-
-		if !isTemplatesExist {
-			templates = append(templates, &Template{
-				DataSource:  templateDetail[datasource],
-				GraphqlType: strings.Title(templateDetail[graphqlType]),
-				Field:       templateDetail[field],
-				Request:     req,
-				Response:    res,
-			})
-		}
+		templates = append(templates, &template)
 
 		return nil
 	})
@@ -77,17 +78,6 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 
 	if len(templates) == 0 {
 		panic("not match directory structure to generate mappingtemplates")
-	}
-
-	// insert default request and response
-	for _, template := range templates {
-		if template.Request == emptyString {
-			template.Request = reqFilename
-		}
-
-		if template.Response == emptyString {
-			template.Response = resFilename
-		}
 	}
 
 	return &MappingTemplates{Templates: templates}

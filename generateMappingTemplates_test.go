@@ -1,3 +1,5 @@
+// +build integration
+
 package vtlgen
 
 import (
@@ -12,36 +14,46 @@ func TestSuccessGenerateMappingTemplates(t *testing.T) {
 			&Template{
 				GraphqlType: "Mutation",
 				Field:       "createProduct",
-				Request:     "haloLambda/mutation/createProduct/req.vtl",
-				Response:    "haloLambda/mutation/createProduct/res.vtl",
+				Request:     "resolver/mutation.createProduct/req.vtl",
+				Response:    "resolver/mutation.createProduct/res.vtl",
+				DataSource:  "productLambda",
+			},
+			&Template{
+				GraphqlType: "Mutation",
+				Field:       "languages",
+				Request:     "resolver/mutation.languages/req.vtl",
+				Response:    "resolver/mutation.languages/res.vtl",
 				DataSource:  "haloLambda",
 			},
 			&Template{
 				GraphqlType: "Namespace",
 				Field:       "languages",
-				Request:     "haloLambda/namespace/languages/req.vtl",
-				Response:    "haloLambda/namespace/languages/res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "resolver/namespace.languages/before.vtl",
+				Response:    "resolver/namespace.languages/after.vtl",
+				Kind:        "PIPELINE",
+				Functions: []string{
+					"oneFunction",
+					"twoFunction",
+				},
 			},
 			&Template{
 				GraphqlType: "Query",
 				Field:       "product",
-				Request:     "haloLambda/query/product/req.vtl",
-				Response:    "res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "resolver/query.product/req.vtl",
+				Response:    "resolver/query.product/res.vtl",
+				DataSource:  "productLambda",
 			},
 			&Template{
 				GraphqlType: "Subscription",
 				Field:       "product",
-				Request:     "req.vtl",
-				Response:    "haloLambda/subscription/product/res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "resolver/subscription.product/req.vtl",
+				Response:    "resolver/subscription.product/res.vtl",
+				DataSource:  "productLambda",
 			},
 		},
 	}
 
-	mappingTemplates := GenerateMappingTemplates("testdata/mapping-templates")
-
+	mappingTemplates := GenerateMappingTemplates("testdata/mapping-templates2")
 	require.Equal(t, expect, mappingTemplates)
 }
 
