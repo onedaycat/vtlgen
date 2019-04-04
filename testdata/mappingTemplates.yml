@@ -4,20 +4,15 @@ fields:
   request: resolver/mutation.createProduct/req.vtl
   response: resolver/mutation.createProduct/res.vtl
   dataSource: productLambda
-  kind: ""
-  functions: []
 - type: Mutation
   field: languages
   request: resolver/mutation.languages/req.vtl
   response: resolver/mutation.languages/res.vtl
   dataSource: haloLambda
-  kind: ""
-  functions: []
 - type: Namespace
   field: languages
   request: resolver/namespace.languages/before.vtl
   response: resolver/namespace.languages/after.vtl
-  dataSource: ""
   kind: PIPELINE
   functions:
   - oneFunction
@@ -27,15 +22,11 @@ fields:
   request: resolver/query.product/req.vtl
   response: resolver/query.product/res.vtl
   dataSource: productLambda
-  kind: ""
-  functions: []
 - type: Subscription
   field: product
   request: resolver/subscription.product/req.vtl
   response: resolver/subscription.product/res.vtl
   dataSource: productLambda
-  kind: ""
-  functions: []
 functions:
 - name: oneFunction
   request: function/oneFunction/req.vtl

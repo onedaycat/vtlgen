@@ -10,9 +10,9 @@ type Template struct {
 	Field       string   `yaml:"field"`
 	Request     string   `yaml:"request"`
 	Response    string   `yaml:"response"`
-	DataSource  string   `yaml:"dataSource"`
-	Kind        string   `yaml:"kind"`
-	Functions   []string `yaml:"functions"`
+	DataSource  string   `yaml:"dataSource,omitempty"`
+	Kind        string   `yaml:"kind,omitempty"`
+	Functions   []string `yaml:"functions,omitempty"`
 }
 
 type Function struct {
