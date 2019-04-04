@@ -2,6 +2,7 @@ package vtlgen
 
 type MappingTemplates struct {
 	Templates []*Template `yaml:"fields"`
+	Functions []*Function `yaml:"functions"`
 }
 
 type Template struct {
@@ -12,4 +13,11 @@ type Template struct {
 	DataSource  string   `yaml:"dataSource"`
 	Kind        string   `yaml:"kind"`
 	Functions   []string `yaml:"functions"`
+}
+
+type Function struct {
+	Name       string `yaml:"name"`
+	Request    string `yaml:"request"`
+	Response   string `yaml:"response"`
+	DataSource string `yaml:"dataSource"`
 }

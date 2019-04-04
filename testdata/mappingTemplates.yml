@@ -1,21 +1,47 @@
 fields:
 - type: Mutation
   field: createProduct
-  request: haloLambda/mutation/createProduct/req.vtl
-  response: haloLambda/mutation/createProduct/res.vtl
+  request: resolver/mutation.createProduct/req.vtl
+  response: resolver/mutation.createProduct/res.vtl
+  dataSource: productLambda
+  kind: ""
+  functions: []
+- type: Mutation
+  field: languages
+  request: resolver/mutation.languages/req.vtl
+  response: resolver/mutation.languages/res.vtl
   dataSource: haloLambda
+  kind: ""
+  functions: []
 - type: Namespace
   field: languages
-  request: haloLambda/namespace/languages/req.vtl
-  response: haloLambda/namespace/languages/res.vtl
-  dataSource: haloLambda
+  request: resolver/namespace.languages/before.vtl
+  response: resolver/namespace.languages/after.vtl
+  dataSource: ""
+  kind: PIPELINE
+  functions:
+  - oneFunction
+  - twoFunction
 - type: Query
   field: product
-  request: haloLambda/query/product/req.vtl
-  response: res.vtl
-  dataSource: haloLambda
+  request: resolver/query.product/req.vtl
+  response: resolver/query.product/res.vtl
+  dataSource: productLambda
+  kind: ""
+  functions: []
 - type: Subscription
   field: product
-  request: req.vtl
-  response: haloLambda/subscription/product/res.vtl
+  request: resolver/subscription.product/req.vtl
+  response: resolver/subscription.product/res.vtl
+  dataSource: productLambda
+  kind: ""
+  functions: []
+functions:
+- name: oneFunction
+  request: function/oneFunction/req.vtl
+  response: function/oneFunction/res.vtl
+  dataSource: productLambda
+- name: twoFunction
+  request: function/twoFunction/req.vtl
+  response: function/twoFunction/res.vtl
   dataSource: haloLambda

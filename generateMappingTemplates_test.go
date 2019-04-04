@@ -11,21 +11,21 @@ import (
 func TestSuccessGenerateMappingTemplates(t *testing.T) {
 	expect := &MappingTemplates{
 		Templates: []*Template{
-			&Template{
+			{
 				GraphqlType: "Mutation",
 				Field:       "createProduct",
 				Request:     "resolver/mutation.createProduct/req.vtl",
 				Response:    "resolver/mutation.createProduct/res.vtl",
 				DataSource:  "productLambda",
 			},
-			&Template{
+			{
 				GraphqlType: "Mutation",
 				Field:       "languages",
 				Request:     "resolver/mutation.languages/req.vtl",
 				Response:    "resolver/mutation.languages/res.vtl",
 				DataSource:  "haloLambda",
 			},
-			&Template{
+			{
 				GraphqlType: "Namespace",
 				Field:       "languages",
 				Request:     "resolver/namespace.languages/before.vtl",
@@ -36,19 +36,33 @@ func TestSuccessGenerateMappingTemplates(t *testing.T) {
 					"twoFunction",
 				},
 			},
-			&Template{
+			{
 				GraphqlType: "Query",
 				Field:       "product",
 				Request:     "resolver/query.product/req.vtl",
 				Response:    "resolver/query.product/res.vtl",
 				DataSource:  "productLambda",
 			},
-			&Template{
+			{
 				GraphqlType: "Subscription",
 				Field:       "product",
 				Request:     "resolver/subscription.product/req.vtl",
 				Response:    "resolver/subscription.product/res.vtl",
 				DataSource:  "productLambda",
+			},
+		},
+		Functions: []*Function{
+			{
+				Name:       "oneFunction",
+				DataSource: "productLambda",
+				Request:    "function/oneFunction/req.vtl",
+				Response:   "function/oneFunction/res.vtl",
+			},
+			{
+				Name:       "twoFunction",
+				DataSource: "haloLambda",
+				Request:    "function/twoFunction/req.vtl",
+				Response:   "function/twoFunction/res.vtl",
 			},
 		},
 	}
