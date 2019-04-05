@@ -1,7 +1,7 @@
 package vtlgen
 
 type DatasourcesGenerated struct {
-	Datasources []*Datasource `yaml:"DatasourcesGenerated"`
+	Datasources []*Datasource `yaml:"datasources"`
 }
 
 type Datasource struct {
@@ -12,7 +12,7 @@ type Datasource struct {
 
 type Config struct {
 	LambdaFunctionArn string `yaml:"lambdaFunctionArn"`
-	ServiceRoleArn    string `yaml:"ServiceRoleArn"`
+	ServiceRoleArn    string `yaml:"serviceRoleArn"`
 }
 
 type DatasourceConfig struct {
