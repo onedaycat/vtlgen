@@ -9,7 +9,7 @@ import (
 )
 
 func TestSuccessDatasourceGenerateMappingTemplates(t *testing.T) {
-	expect := &MappingTemplates{
+	expect := &MappingTemplatesGenerated{
 		Templates: []*Template{
 			{
 				GraphqlType: "Mutation",

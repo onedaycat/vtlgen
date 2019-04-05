@@ -1,7 +1,7 @@
 package vtlgen
 
-type Datasources struct {
-	Datasources []*Datasource `yaml:"Datasources"`
+type DatasourcesGenerated struct {
+	Datasources []*Datasource `yaml:"DatasourcesGenerated"`
 }
 
 type Datasource struct {
@@ -15,14 +15,14 @@ type Config struct {
 	ServiceRoleArn    string `yaml:"ServiceRoleArn"`
 }
 
-type DatasourceGenerate struct {
-	AccountID         string              `yaml:"accountId"`
-	ServiceRoleArn    string              `yaml:"serviceRoleArn"`
-	NoneDatasource    string              `yaml:"noneDatasource"`
-	LambdaDatasources []*LambdaDatasource `yaml:"lambdaDatasources"`
+type DatasourceConfig struct {
+	AccountID         string                    `yaml:"accountId"`
+	ServiceRoleArn    string                    `yaml:"serviceRoleArn"`
+	NoneDatasource    string                    `yaml:"noneDatasource"`
+	LambdaDatasources []*LambdaDatasourceConfig `yaml:"lambdaDatasources"`
 }
 
-type LambdaDatasource struct {
+type LambdaDatasourceConfig struct {
 	Name           string `yaml:"name"`
 	Service        string `yaml:"service"`
 	Version        string `yaml:"version"`

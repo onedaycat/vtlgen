@@ -13,7 +13,7 @@ import (
 
 var isValidFilename = regexp.MustCompile("(.+)/config.yml")
 
-func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
+func GenerateMappingTemplates(parseDirectory string) *MappingTemplatesGenerated {
 	var err error
 	var templates []*Template
 	var functions []*Function
@@ -95,7 +95,7 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 		panic("not match directory structure to generate mappingtemplates")
 	}
 
-	return &MappingTemplates{
+	return &MappingTemplatesGenerated{
 		Templates: templates,
 		Functions: functions,
 	}

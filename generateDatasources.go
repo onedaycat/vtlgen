@@ -7,14 +7,14 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func GenerateDatasources(parseDirectory string) *Datasources {
+func GenerateDatasources(parseDirectory string) *DatasourcesGenerated {
 	var err error
 	config, err := ioutil.ReadFile(parseDirectory + PathDelim + DatasourceGenerateFilename)
 	if err != nil {
 		panic(err)
 	}
 
-	dg := &DatasourceGenerate{}
+	dg := &DatasourceConfig{}
 	err = yaml.Unmarshal(config, dg)
 	if err != nil {
 		panic(err)
@@ -54,7 +54,7 @@ func GenerateDatasources(parseDirectory string) *Datasources {
 		dss = append(dss, ds)
 	}
 
-	return &Datasources{
+	return &DatasourcesGenerated{
 		Datasources: dss,
 	}
 }

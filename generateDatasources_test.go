@@ -7,7 +7,7 @@ import (
 )
 
 func TestSuccessGenerateDatasources(t *testing.T) {
-	expect := &Datasources{
+	expect := &DatasourcesGenerated{
 		Datasources: []*Datasource{
 			{
 				Type: "NONE",
