@@ -40,6 +40,6 @@ func TestSuccessGenerateDatasources(t *testing.T) {
 		},
 	}
 
-	datasources := GenerateDatasources("testdata")
+	datasources := GenerateDatasources("testdata/datasource_generate.yml")
 	require.Equal(t, expect, datasources)
 }

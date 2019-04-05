@@ -9,7 +9,7 @@ import (
 
 func GenerateDatasources(parseDirectory string) *DatasourcesGenerated {
 	var err error
-	config, err := ioutil.ReadFile(parseDirectory + PathDelim + DatasourceGenerateFilename)
+	config, err := ioutil.ReadFile(parseDirectory)
 	if err != nil {
 		panic(err)
 	}
