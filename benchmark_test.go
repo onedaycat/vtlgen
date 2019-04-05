@@ -2,8 +2,8 @@ package vtlgen
 
 import "testing"
 
-func BenchmarkGenerateMappingTemplates(b *testing.B) {
+func BenchmarkGenerateMappingTemplatesAndFunctions(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		GenerateMappingTemplates("testdata/mapping-templates")
+		GenerateMappingTemplatesAndFunctions("testdata/mapping-templates")
 	}
 }

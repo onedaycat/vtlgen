@@ -8,19 +8,24 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+const (
+	mappingTemplateFilename = "mappingTemplates.yml"
+)
+
 func main() {
-	argDir := flag.String("dir", "", "a string of directory to parse to generate mapping template")
-	argOut := flag.String("out", "", "a string of file to write generate mapping template file")
+	argDir := flag.String("dir", "", "select directory that have datasource_generate.yml and folder mappingTemplates.")
 	flag.Parse()
 
-	mappingTemplates := vtlgen.GenerateMappingTemplates(*argDir)
+	mappingTemplates := vtlgen.GenerateMappingTemplatesAndFunctions(*argDir)
+	datasource := vtlgen.GenerateDatasources(*argDir)
 
 	results, err := yaml.Marshal(mappingTemplates)
 	if err != nil {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile(*argOut, results, 0644)
+	// testdata/mappingTemplates.yml
+	err = ioutil.WriteFile(*argDir+mappingTemplateFilename, results, 0644)
 	if err != nil {
 		panic(err)
 	}

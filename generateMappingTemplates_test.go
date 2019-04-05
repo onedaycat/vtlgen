@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSuccessGenerateMappingTemplates(t *testing.T) {
+func TestSuccessGenerateMappingTemplatesAndFunctions(t *testing.T) {
 	expect := &MappingTemplates{
 		Templates: []*Template{
 			{
@@ -16,14 +16,14 @@ func TestSuccessGenerateMappingTemplates(t *testing.T) {
 				Field:       "createProduct",
 				Request:     "resolver/mutation.createProduct/req.vtl",
 				Response:    "resolver/mutation.createProduct/res.vtl",
-				DataSource:  "productLambda",
+				Datasource:  "productLambda",
 			},
 			{
 				GraphqlType: "Mutation",
 				Field:       "languages",
 				Request:     "resolver/mutation.languages/req.vtl",
 				Response:    "resolver/mutation.languages/res.vtl",
-				DataSource:  "haloLambda",
+				Datasource:  "haloLambda",
 			},
 			{
 				GraphqlType: "Namespace",
@@ -41,36 +41,32 @@ func TestSuccessGenerateMappingTemplates(t *testing.T) {
 				Field:       "product",
 				Request:     "resolver/query.product/req.vtl",
 				Response:    "resolver/query.product/res.vtl",
-				DataSource:  "productLambda",
+				Datasource:  "productLambda",
 			},
 			{
 				GraphqlType: "Subscription",
 				Field:       "product",
 				Request:     "resolver/subscription.product/req.vtl",
 				Response:    "resolver/subscription.product/res.vtl",
-				DataSource:  "productLambda",
+				Datasource:  "productLambda",
 			},
 		},
 		Functions: []*Function{
 			{
 				Name:       "oneFunction",
-				DataSource: "productLambda",
+				Datasource: "productLambda",
 				Request:    "function/oneFunction/req.vtl",
 				Response:   "function/oneFunction/res.vtl",
 			},
 			{
 				Name:       "twoFunction",
-				DataSource: "haloLambda",
+				Datasource: "haloLambda",
 				Request:    "function/twoFunction/req.vtl",
 				Response:   "function/twoFunction/res.vtl",
 			},
 		},
 	}
 
-	mappingTemplates := GenerateMappingTemplates("testdata/mapping-templates2")
+	mappingTemplates := GenerateMappingTemplatesAndFunctions("testdata/mapping-templates")
 	require.Equal(t, expect, mappingTemplates)
-}
-
-func TestNotMatchGenerateMappingTemplates(t *testing.T) {
-	require.PanicsWithValue(t, "not match directory structure to generate mappingtemplates", func() { GenerateMappingTemplates("./somethingWrong") })
 }

@@ -34,7 +34,7 @@ const (
 // meaning: (datasource)/(graphqlType)/(field)/(requestOrResponse)
 var isValidFilename = regexp.MustCompile("(.+)/config.yml")
 
-func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
+func GenerateMappingTemplatesAndFunctions(parseDirectory string) *MappingTemplates {
 	var err error
 	var templates []*Template
 	var functions []*Function
@@ -60,7 +60,7 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 		// normal or pipeline resolver
 		path = strings.Replace(path, parseDirectory+pathDelim, emptyString, 1)
 
-		if template.DataSource != emptyString {
+		if template.Datasource != emptyString {
 			req := strings.Replace(path, configFilename, reqFilename, 1)
 			res := strings.Replace(path, configFilename, resFilename, 1)
 			template.Request = req

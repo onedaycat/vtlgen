@@ -10,14 +10,7 @@ type Template struct {
 	Field       string   `yaml:"field"`
 	Request     string   `yaml:"request"`
 	Response    string   `yaml:"response"`
-	DataSource  string   `yaml:"dataSource,omitempty"`
+	Datasource  string   `yaml:"dataSource,omitempty"`
 	Kind        string   `yaml:"kind,omitempty"`
 	Functions   []string `yaml:"functions,omitempty"`
-}
-
-type Function struct {
-	Name       string `yaml:"name"`
-	Request    string `yaml:"request"`
-	Response   string `yaml:"response"`
-	DataSource string `yaml:"dataSource"`
 }
