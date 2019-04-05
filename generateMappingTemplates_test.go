@@ -1,3 +1,5 @@
+// +build integration
+
 package vtlgen
 
 import (
@@ -6,45 +8,65 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSuccessGenerateMappingTemplates(t *testing.T) {
-	expect := &MappingTemplates{
+func TestSuccessDatasourceGenerateMappingTemplates(t *testing.T) {
+	expect := &MappingTemplatesGenerated{
 		Templates: []*Template{
-			&Template{
+			{
 				GraphqlType: "Mutation",
 				Field:       "createProduct",
-				Request:     "haloLambda/mutation/createProduct/req.vtl",
-				Response:    "haloLambda/mutation/createProduct/res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "mapping-templates/resolver/mutation.createProduct/req.vtl",
+				Response:    "mapping-templates/resolver/mutation.createProduct/res.vtl",
+				Datasource:  "productLambda",
 			},
-			&Template{
+			{
+				GraphqlType: "Mutation",
+				Field:       "languages",
+				Request:     "mapping-templates/resolver/mutation.languages/req.vtl",
+				Response:    "mapping-templates/resolver/mutation.languages/res.vtl",
+				Datasource:  "haloLambda",
+			},
+			{
 				GraphqlType: "Namespace",
 				Field:       "languages",
-				Request:     "haloLambda/namespace/languages/req.vtl",
-				Response:    "haloLambda/namespace/languages/res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "mapping-templates/resolver/namespace.languages/before.vtl",
+				Response:    "mapping-templates/resolver/namespace.languages/after.vtl",
+				Kind:        "PIPELINE",
+				Functions: []string{
+					"oneFunction",
+					"twoFunction",
+				},
 			},
-			&Template{
+			{
 				GraphqlType: "Query",
 				Field:       "product",
-				Request:     "haloLambda/query/product/req.vtl",
-				Response:    "res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "mapping-templates/resolver/query.product/req.vtl",
+				Response:    "mapping-templates/resolver/query.product/res.vtl",
+				Datasource:  "productLambda",
 			},
-			&Template{
+			{
 				GraphqlType: "Subscription",
 				Field:       "product",
-				Request:     "req.vtl",
-				Response:    "haloLambda/subscription/product/res.vtl",
-				DataSource:  "haloLambda",
+				Request:     "mapping-templates/resolver/subscription.product/req.vtl",
+				Response:    "mapping-templates/resolver/subscription.product/res.vtl",
+				Datasource:  "productLambda",
+			},
+		},
+		Functions: []*Function{
+			{
+				Name:       "oneFunction",
+				Datasource: "productLambda",
+				Request:    "mapping-templates/function/oneFunction/req.vtl",
+				Response:   "mapping-templates/function/oneFunction/res.vtl",
+			},
+			{
+				Name:       "twoFunction",
+				Datasource: "haloLambda",
+				Request:    "mapping-templates/function/twoFunction/req.vtl",
+				Response:   "mapping-templates/function/twoFunction/res.vtl",
 			},
 		},
 	}
 
-	mappingTemplates := GenerateMappingTemplates("testdata/mapping-templates")
-
+	mappingTemplates := GenerateMappingTemplates("testdata")
 	require.Equal(t, expect, mappingTemplates)
-}
-
-func TestNotMatchGenerateMappingTemplates(t *testing.T) {
-	require.PanicsWithValue(t, "not match directory structure to generate mappingtemplates", func() { GenerateMappingTemplates("./somethingWrong") })
 }

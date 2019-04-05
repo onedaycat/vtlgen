@@ -1,0 +1,6 @@
+
+type: Namespace
+field: languages
+functions:
+  - oneFunction
+  - twoFunction

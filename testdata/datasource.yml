@@ -1,0 +1,18 @@
+datasources:
+- type: NONE
+  name: local
+- type: AWS_LAMBDA
+  name: accountQuery
+  config:
+    lambdaFunctionArn: arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-account-qry-${self:provider.stage}-qry:$LATEST
+    serviceRoleArn: arn:aws:iam::FAKE12345678:role/${self:service}-${self:provider.stage}
+- type: AWS_LAMBDA
+  name: accountMutation
+  config:
+    lambdaFunctionArn: arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-account-cmd-${self:provider.stage}-cmd:$LATEST
+    serviceRoleArn: arn:aws:iam::FAKE12345678:role/${self:service}-${self:provider.stage}
+- type: AWS_LAMBDA
+  name: storeMutation
+  config:
+    lambdaFunctionArn: arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-store-cmd-${self:provider.stage}-cmd:VVVV
+    serviceRoleArn: XXXX

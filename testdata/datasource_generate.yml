@@ -1,0 +1,15 @@
+accountId: FAKE12345678
+serviceRoleArn: arn:aws:iam::${accountId}:role/${self:service}-${self:provider.stage}
+noneDatasource: local
+lambdaDatasources:
+- name: accountQuery
+  service: sel-account-qry
+  handler: qry
+- name: accountMutation
+  service: sel-account-cmd
+  handler: cmd
+- name: storeMutation
+  service: sel-store-cmd
+  handler: cmd
+  version: VVVV
+  serviceRoleArn: XXXX
