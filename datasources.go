@@ -7,7 +7,7 @@ type Datasources struct {
 type Datasource struct {
 	Type   string  `yaml:"type"`
 	Name   string  `yaml:"name"`
-	Config *Config `yaml:"config"`
+	Config *Config `yaml:"config,omitempty"`
 }
 
 type Config struct {

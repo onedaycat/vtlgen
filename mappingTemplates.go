@@ -1,8 +1,8 @@
 package vtlgen
 
 type MappingTemplates struct {
-	Templates []*Template `yaml:"fields"`
-	Functions []*Function `yaml:"functions"`
+	Templates []*Template `yaml:"fields,omitempty"`
+	Functions []*Function `yaml:"functions,omitempty"`
 }
 
 type Template struct {

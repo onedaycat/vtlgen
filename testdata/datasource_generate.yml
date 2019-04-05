@@ -1,4 +1,4 @@
-accountId: 805785015849
+accountId: FAKE12345678
 serviceRoleArn: arn:aws:iam::${accountId}:role/${self:service}-${self:provider.stage}
 noneDatasource: local
 lambdaDatasources:
@@ -11,5 +11,5 @@ lambdaDatasources:
 - name: storeMutation
   service: sel-store-cmd
   handler: cmd
-  version: XXXX
+  version: VVVV
   serviceRoleArn: XXXX

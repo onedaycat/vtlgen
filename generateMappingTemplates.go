@@ -11,37 +11,16 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-const (
-	datasource        = 0
-	graphqlType       = 1
-	field             = 2
-	requestOrResponse = 3
-)
-
-const (
-	emptyString    = ""
-	pathDelim      = "/"
-	pathResolver   = "/resolver"
-	pathFunctions  = "/function"
-	reqFilename    = "req.vtl"
-	resFilename    = "res.vtl"
-	beforeFilename = "before.vtl"
-	afterFilename  = "after.vtl"
-	configFilename = "config.yml"
-	pipeline       = "PIPELINE"
-)
-
-// meaning: (datasource)/(graphqlType)/(field)/(requestOrResponse)
 var isValidFilename = regexp.MustCompile("(.+)/config.yml")
 
-func GenerateMappingTemplatesAndFunctions(parseDirectory string) *MappingTemplates {
+func GenerateMappingTemplates(parseDirectory string) *MappingTemplates {
 	var err error
 	var templates []*Template
 	var functions []*Function
 	parseDirectory = path.Clean(parseDirectory)
 
 	// resolver
-	err = filepath.Walk(parseDirectory+pathResolver, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(parseDirectory+PathMappingTemplates+PathResolver, func(path string, info os.FileInfo, err error) error {
 		if !isValidFilename.MatchString(path) {
 			return nil
 		}
@@ -57,18 +36,18 @@ func GenerateMappingTemplatesAndFunctions(parseDirectory string) *MappingTemplat
 			panic(err)
 		}
 
-		// normal or pipeline resolver
-		path = strings.Replace(path, parseDirectory+pathDelim, emptyString, 1)
+		path = strings.Replace(path, parseDirectory+PathDelim, EmptyString, 1)
 
-		if template.Datasource != emptyString {
-			req := strings.Replace(path, configFilename, reqFilename, 1)
-			res := strings.Replace(path, configFilename, resFilename, 1)
+		// normal or pipeline resolver
+		if template.Datasource != EmptyString {
+			req := strings.Replace(path, ConfigFilename, ReqFilename, 1)
+			res := strings.Replace(path, ConfigFilename, ResFilename, 1)
 			template.Request = req
 			template.Response = res
 		} else {
-			req := strings.Replace(path, configFilename, beforeFilename, 1)
-			res := strings.Replace(path, configFilename, afterFilename, 1)
-			template.Kind = pipeline
+			req := strings.Replace(path, ConfigFilename, BeforeFilename, 1)
+			res := strings.Replace(path, ConfigFilename, AfterFilename, 1)
+			template.Kind = PipelineString
 			template.Request = req
 			template.Response = res
 		}
@@ -82,7 +61,7 @@ func GenerateMappingTemplatesAndFunctions(parseDirectory string) *MappingTemplat
 	}
 
 	// function
-	err = filepath.Walk(parseDirectory+pathFunctions, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(parseDirectory+PathMappingTemplates+PathFunctions, func(path string, info os.FileInfo, err error) error {
 		if !isValidFilename.MatchString(path) {
 			return nil
 		}
@@ -98,10 +77,9 @@ func GenerateMappingTemplatesAndFunctions(parseDirectory string) *MappingTemplat
 			panic(err)
 		}
 
-		// normal or pipeline resolver
-		path = strings.Replace(path, parseDirectory+pathDelim, emptyString, 1)
-		req := strings.Replace(path, configFilename, reqFilename, 1)
-		res := strings.Replace(path, configFilename, resFilename, 1)
+		path = strings.Replace(path, parseDirectory+PathDelim, EmptyString, 1)
+		req := strings.Replace(path, ConfigFilename, ReqFilename, 1)
+		res := strings.Replace(path, ConfigFilename, ResFilename, 1)
 		fn.Request = req
 		fn.Response = res
 

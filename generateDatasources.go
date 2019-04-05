@@ -7,29 +7,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// const (
-// 	datasource        = 0
-// 	graphqlType       = 1
-// 	field             = 2
-// 	requestOrResponse = 3
-// )
-
-// const (
-// 	emptyString    = ""
-// 	pathDelim      = "/"
-// 	pathResolver   = "/resolver"
-// 	pathFunctions  = "/function"
-// 	reqFilename    = "req.vtl"
-// 	resFilename    = "res.vtl"
-// 	beforeFilename = "before.vtl"
-// 	afterFilename  = "after.vtl"
-// 	configFilename = "config.yml"
-// 	pipeline       = "PIPELINE"
-// )
-
 func GenerateDatasources(parseDirectory string) *Datasources {
 	var err error
-	config, err := ioutil.ReadFile(parseDirectory)
+	config, err := ioutil.ReadFile(parseDirectory + PathDelim + DatasourceGenerateFilename)
 	if err != nil {
 		panic(err)
 	}
@@ -44,7 +24,7 @@ func GenerateDatasources(parseDirectory string) *Datasources {
 
 	// none datasource
 	dss = append(dss, &Datasource{
-		Type: "NONE",
+		Type: NoneString,
 		Name: dg.NoneDatasource,
 	})
 
@@ -54,22 +34,22 @@ func GenerateDatasources(parseDirectory string) *Datasources {
 		ds := &Datasource{}
 		ds.Config = &Config{}
 
-		if ld.ServiceRoleArn == "" {
+		if ld.ServiceRoleArn == EmptyString {
 			roleArn = strings.Replace(dg.ServiceRoleArn, "${accountId}", dg.AccountID, 1)
 		} else {
 			roleArn = ld.ServiceRoleArn
 		}
 
-		if ld.Version == "" {
-			version = "$LATEST"
+		if ld.Version == EmptyString {
+			version = LastestString
 		} else {
 			version = ld.Version
 		}
 
-		ds.Type = "AWS_LAMBDA"
+		ds.Type = AwsLambdaString
 		ds.Name = ld.Name
 		ds.Config.ServiceRoleArn = roleArn
-		ds.Config.LambdaFunctionArn = "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:" + ld.Service + "-${self:provider.stage}-" + ld.Handler + ":" + version
+		ds.Config.LambdaFunctionArn = "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:" + ld.Service + "-${self:provider.stage}-" + ld.Handler + ColonString + version
 
 		dss = append(dss, ds)
 	}

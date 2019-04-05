@@ -1,5 +1,3 @@
-// +build integration
-
 package vtlgen
 
 import (
@@ -20,7 +18,7 @@ func TestSuccessGenerateDatasources(t *testing.T) {
 				Name: "accountQuery",
 				Config: &Config{
 					LambdaFunctionArn: "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-account-qry-${self:provider.stage}-qry:$LATEST",
-					ServiceRoleArn:    "arn:aws:iam::805785015849:role/${self:service}-${self:provider.stage}",
+					ServiceRoleArn:    "arn:aws:iam::FAKE12345678:role/${self:service}-${self:provider.stage}",
 				},
 			},
 			{
@@ -28,20 +26,20 @@ func TestSuccessGenerateDatasources(t *testing.T) {
 				Name: "accountMutation",
 				Config: &Config{
 					LambdaFunctionArn: "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-account-cmd-${self:provider.stage}-cmd:$LATEST",
-					ServiceRoleArn:    "arn:aws:iam::805785015849:role/${self:service}-${self:provider.stage}",
+					ServiceRoleArn:    "arn:aws:iam::FAKE12345678:role/${self:service}-${self:provider.stage}",
 				},
 			},
 			{
 				Type: "AWS_LAMBDA",
 				Name: "storeMutation",
 				Config: &Config{
-					LambdaFunctionArn: "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-store-cmd-${self:provider.stage}-cmd:XXXX",
+					LambdaFunctionArn: "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:sel-store-cmd-${self:provider.stage}-cmd:VVVV",
 					ServiceRoleArn:    "XXXX",
 				},
 			},
 		},
 	}
 
-	datasources := GenerateDatasources("testdata/datasource_generate.yml")
+	datasources := GenerateDatasources("testdata")
 	require.Equal(t, expect, datasources)
 }
