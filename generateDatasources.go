@@ -1,8 +1,8 @@
 package vtlgen
 
 import (
+	"fmt"
 	"io/ioutil"
-	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -30,15 +30,9 @@ func GenerateDatasources(parseDirectory string) *DatasourcesGenerated {
 
 	// lambda datasource
 	for _, ld := range dg.LambdaDatasources {
-		var version, roleArn string
+		var version string
 		ds := &Datasource{}
 		ds.Config = &Config{}
-
-		if ld.ServiceRoleArn == EmptyString {
-			roleArn = strings.Replace(dg.ServiceRoleArn, "${accountId}", dg.AccountID, 1)
-		} else {
-			roleArn = ld.ServiceRoleArn
-		}
 
 		if ld.Version == EmptyString {
 			version = LastestString
@@ -48,8 +42,13 @@ func GenerateDatasources(parseDirectory string) *DatasourcesGenerated {
 
 		ds.Type = AwsLambdaString
 		ds.Name = ld.Name
-		ds.Config.ServiceRoleArn = roleArn
-		ds.Config.LambdaFunctionArn = "arn:aws:lambda:${env:AWS_REGION}:${self:provider.accountId}:function:" + ld.Service + "-${self:provider.stage}-" + ld.Handler + ColonString + version
+
+		if ld.ServiceRole != EmptyString {
+			ds.Config.ServiceRoleArn = fmt.Sprintf("arn:aws:iam::%s:role/%s", dg.AccountID, ld.ServiceRole)
+		} else {
+			ds.Config.ServiceRoleArn = fmt.Sprintf("arn:aws:iam::%s:role/%s", dg.AccountID, dg.ServiceRole)
+		}
+		ds.Config.LambdaFunctionArn = fmt.Sprintf("arn:aws:lambda:${self:provider.region}:%s:function:%s-${self:provider.stage}-%s:%s", dg.AccountID, ld.Service, ld.Handler, version)
 
 		dss = append(dss, ds)
 	}

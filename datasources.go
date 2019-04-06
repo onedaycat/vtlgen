@@ -17,15 +17,15 @@ type Config struct {
 
 type DatasourceConfig struct {
 	AccountID         string                    `yaml:"accountId"`
-	ServiceRoleArn    string                    `yaml:"serviceRoleArn"`
+	ServiceRole       string                    `yaml:"serviceRole"`
 	NoneDatasource    string                    `yaml:"noneDatasource"`
 	LambdaDatasources []*LambdaDatasourceConfig `yaml:"lambdaDatasources"`
 }
 
 type LambdaDatasourceConfig struct {
-	Name           string `yaml:"name"`
-	Service        string `yaml:"service"`
-	Version        string `yaml:"version"`
-	Handler        string `yaml:"handler"`
-	ServiceRoleArn string `yaml:"serviceRoleArn"`
+	Name        string `yaml:"name"`
+	Service     string `yaml:"service"`
+	Version     string `yaml:"version"`
+	Handler     string `yaml:"handler"`
+	ServiceRole string `yaml:"serviceRole"`
 }
