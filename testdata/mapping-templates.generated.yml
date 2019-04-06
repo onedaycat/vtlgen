@@ -1,38 +1,38 @@
 fields:
 - type: Mutation
   field: createProduct
-  request: mapping-templates/resolver/mutation.createProduct/req.vtl
-  response: mapping-templates/resolver/mutation.createProduct/res.vtl
+  request: resolver/mutation.createProduct/req.vtl
+  response: resolver/mutation.createProduct/res.vtl
   dataSource: productLambda
 - type: Mutation
   field: languages
-  request: mapping-templates/resolver/mutation.languages/req.vtl
-  response: mapping-templates/resolver/mutation.languages/res.vtl
+  request: resolver/mutation.languages/req.vtl
+  response: resolver/mutation.languages/res.vtl
   dataSource: haloLambda
 - type: Namespace
   field: languages
-  request: mapping-templates/resolver/namespace.languages/before.vtl
-  response: mapping-templates/resolver/namespace.languages/after.vtl
+  request: resolver/namespace.languages/before.vtl
+  response: resolver/namespace.languages/after.vtl
   kind: PIPELINE
   functions:
   - oneFunction
   - twoFunction
 - type: Query
   field: product
-  request: mapping-templates/resolver/query.product/req.vtl
-  response: mapping-templates/resolver/query.product/res.vtl
+  request: resolver/query.product/req.vtl
+  response: resolver/query.product/res.vtl
   dataSource: productLambda
 - type: Subscription
   field: product
-  request: mapping-templates/resolver/subscription.product/req.vtl
-  response: mapping-templates/resolver/subscription.product/res.vtl
+  request: resolver/subscription.product/req.vtl
+  response: resolver/subscription.product/res.vtl
   dataSource: productLambda
 functions:
 - name: oneFunction
-  request: mapping-templates/function/oneFunction/req.vtl
-  response: mapping-templates/function/oneFunction/res.vtl
+  request: function/oneFunction/req.vtl
+  response: function/oneFunction/res.vtl
   dataSource: productLambda
 - name: twoFunction
-  request: mapping-templates/function/twoFunction/req.vtl
-  response: mapping-templates/function/twoFunction/res.vtl
+  request: function/twoFunction/req.vtl
+  response: function/twoFunction/res.vtl
   dataSource: haloLambda

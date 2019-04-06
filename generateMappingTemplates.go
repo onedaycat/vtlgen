@@ -20,12 +20,12 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplatesGenerated 
 	parseDirectory = path.Clean(parseDirectory)
 
 	// resolver
-	err = filepath.Walk(parseDirectory+PathMappingTemplates+PathResolver, func(path string, info os.FileInfo, err error) error {
-		if !isValidFilename.MatchString(path) {
+	err = filepath.Walk(parseDirectory+PathMappingTemplates+PathResolver, func(fpath string, info os.FileInfo, err error) error {
+		if !isValidFilename.MatchString(fpath) {
 			return nil
 		}
 
-		config, err := ioutil.ReadFile(path)
+		config, err := ioutil.ReadFile(fpath)
 		if err != nil {
 			panic(err)
 		}
@@ -36,17 +36,21 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplatesGenerated 
 			panic(err)
 		}
 
-		path = strings.Replace(path, parseDirectory+PathDelim, EmptyString, 1)
+		if parseDirectory == DotString {
+			fpath = strings.Replace(fpath, "mapping-templates/", EmptyString, 1)
+		} else {
+			fpath = strings.Replace(fpath, parseDirectory+PathMappingTemplates+PathDelim, EmptyString, 1)
+		}
 
 		// normal or pipeline resolver
 		if template.Datasource != EmptyString {
-			req := strings.Replace(path, ConfigFilename, ReqFilename, 1)
-			res := strings.Replace(path, ConfigFilename, ResFilename, 1)
+			req := strings.Replace(fpath, ConfigFilename, ReqFilename, 1)
+			res := strings.Replace(fpath, ConfigFilename, ResFilename, 1)
 			template.Request = req
 			template.Response = res
 		} else {
-			req := strings.Replace(path, ConfigFilename, BeforeFilename, 1)
-			res := strings.Replace(path, ConfigFilename, AfterFilename, 1)
+			req := strings.Replace(fpath, ConfigFilename, BeforeFilename, 1)
+			res := strings.Replace(fpath, ConfigFilename, AfterFilename, 1)
 			template.Kind = PipelineString
 			template.Request = req
 			template.Response = res
@@ -61,12 +65,12 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplatesGenerated 
 	}
 
 	// function
-	err = filepath.Walk(parseDirectory+PathMappingTemplates+PathFunctions, func(path string, info os.FileInfo, err error) error {
-		if !isValidFilename.MatchString(path) {
+	err = filepath.Walk(parseDirectory+PathMappingTemplates+PathFunctions, func(fpath string, info os.FileInfo, err error) error {
+		if !isValidFilename.MatchString(fpath) {
 			return nil
 		}
 
-		config, err := ioutil.ReadFile(path)
+		config, err := ioutil.ReadFile(fpath)
 		if err != nil {
 			panic(err)
 		}
@@ -77,9 +81,13 @@ func GenerateMappingTemplates(parseDirectory string) *MappingTemplatesGenerated 
 			panic(err)
 		}
 
-		path = strings.Replace(path, parseDirectory+PathDelim, EmptyString, 1)
-		req := strings.Replace(path, ConfigFilename, ReqFilename, 1)
-		res := strings.Replace(path, ConfigFilename, ResFilename, 1)
+		if parseDirectory == DotString {
+			fpath = strings.Replace(fpath, "mapping-templates/", EmptyString, 1)
+		} else {
+			fpath = strings.Replace(fpath, parseDirectory+PathMappingTemplates+PathDelim, EmptyString, 1)
+		}
+		req := strings.Replace(fpath, ConfigFilename, ReqFilename, 1)
+		res := strings.Replace(fpath, ConfigFilename, ResFilename, 1)
 		fn.Request = req
 		fn.Response = res
 
