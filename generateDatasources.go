@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 func GenerateDatasources(parseDirectory string) *DatasourcesGenerated {
@@ -48,7 +48,7 @@ func GenerateDatasources(parseDirectory string) *DatasourcesGenerated {
 		} else {
 			ds.Config.ServiceRoleArn = fmt.Sprintf("arn:aws:iam::%s:role/%s", dg.AccountID, dg.ServiceRole)
 		}
-		ds.Config.LambdaFunctionArn = fmt.Sprintf("arn:aws:lambda:${self:provider.region}:%s:function:%s-${self:provider.stage}-%s:%s", dg.AccountID, ld.Service, ld.Handler, version)
+		ds.Config.LambdaFunctionArn = fmt.Sprintf("arn:aws:lambda:${self:provider.region}:%s:function:%s-${self:provider.stage}:%s", dg.AccountID, ld.Service, version)
 
 		dss = append(dss, ds)
 	}

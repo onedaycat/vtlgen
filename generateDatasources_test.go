@@ -17,7 +17,7 @@ func TestSuccessGenerateDatasources(t *testing.T) {
 				Type: "AWS_LAMBDA",
 				Name: "accountQuery",
 				Config: &Config{
-					LambdaFunctionArn: "arn:aws:lambda:${self:provider.region}:FAKE12345678:function:sel-account-qry-${self:provider.stage}-qry:$LATEST",
+					LambdaFunctionArn: "arn:aws:lambda:${self:provider.region}:FAKE12345678:function:sel-account-qry-${self:provider.stage}:$LATEST",
 					ServiceRoleArn:    "arn:aws:iam::FAKE12345678:role/${self:service}-${self:provider.stage}",
 				},
 			},
@@ -25,7 +25,7 @@ func TestSuccessGenerateDatasources(t *testing.T) {
 				Type: "AWS_LAMBDA",
 				Name: "accountMutation",
 				Config: &Config{
-					LambdaFunctionArn: "arn:aws:lambda:${self:provider.region}:FAKE12345678:function:sel-account-cmd-${self:provider.stage}-cmd:$LATEST",
+					LambdaFunctionArn: "arn:aws:lambda:${self:provider.region}:FAKE12345678:function:sel-account-cmd-${self:provider.stage}:$LATEST",
 					ServiceRoleArn:    "arn:aws:iam::FAKE12345678:role/${self:service}-${self:provider.stage}",
 				},
 			},
@@ -33,7 +33,7 @@ func TestSuccessGenerateDatasources(t *testing.T) {
 				Type: "AWS_LAMBDA",
 				Name: "storeMutation",
 				Config: &Config{
-					LambdaFunctionArn: "arn:aws:lambda:${self:provider.region}:FAKE12345678:function:sel-store-cmd-${self:provider.stage}-cmd:VVVV",
+					LambdaFunctionArn: "arn:aws:lambda:${self:provider.region}:FAKE12345678:function:sel-store-cmd-${self:provider.stage}:VVVV",
 					ServiceRoleArn:    "arn:aws:iam::FAKE12345678:role/XXXX",
 				},
 			},

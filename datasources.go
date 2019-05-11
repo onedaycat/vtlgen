@@ -26,6 +26,5 @@ type LambdaDatasourceConfig struct {
 	Name        string `yaml:"name"`
 	Service     string `yaml:"service"`
 	Version     string `yaml:"version"`
-	Handler     string `yaml:"handler"`
 	ServiceRole string `yaml:"serviceRole"`
 }

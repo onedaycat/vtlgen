@@ -2,3 +2,4 @@ vtlgen/vtlgen
 testing.yml
 vendor
 .vscode
+.idea
